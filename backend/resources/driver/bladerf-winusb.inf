@@ -1,0 +1,49 @@
+; bladerf-winusb.inf
+; Project-bundled WinUSB driver package for Nuand bladeRF devices.
+;
+; This INF binds the Microsoft in-box WinUSB function driver (winusb.sys) to
+; the bladeRF. libbladeRF / bladeRF-cli talk to the device over WinUSB, so no
+; third-party driver binaries are needed - Windows ships the driver itself
+; (see [Version] ClassGuid, identical to the inbox winusb.inf). This package
+; replaces the usual "install via Zadig" step.
+;
+; Install: right-click bladerf-winusb.inf -> Install, or (recommended) run
+; install-driver.ps1 from an elevated PowerShell.
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = USBDevice
+ClassGuid   = {88BAE032-5A81-49f0-BC3D-A4FF138216D6}
+Provider    = %MfgName%
+DriverVer   = 08/19/2026,10.0.26100.1
+
+[Manufacturer]
+%MfgName% = DeviceList,NTamd64
+
+[DeviceList.NTamd64]
+%bladeRF2.DeviceDesc%     = DriverInstall, USB\VID_2CF0&PID_5250
+%bladeRF.DeviceDesc%      = DriverInstall, USB\VID_2CF0&PID_5246
+%bladeRFBoot.DeviceDesc%  = DriverInstall, USB\VID_2CF0&PID_5247
+%FX3Recovery.DeviceDesc%  = DriverInstall, USB\VID_04B4&PID_00F3
+
+; All three DDInstall sections must reference the matching inbox WinUSB
+; sections (see the comments at the top of winusb.inf for this pattern).
+
+[DriverInstall]
+Include = winusb.inf
+Needs   = WINUSB.NT
+
+[DriverInstall.HW]
+Include = winusb.inf
+Needs   = WINUSB.NT.HW
+
+[DriverInstall.Services]
+Include = winusb.inf
+Needs   = WINUSB.NT.Services
+
+[Strings]
+MfgName                 = "Nuand, LLC"
+bladeRF2.DeviceDesc     = "bladeRF 2.0 (WinUSB)"
+bladeRF.DeviceDesc      = "bladeRF x40/x115 (WinUSB)"
+bladeRFBoot.DeviceDesc  = "bladeRF bootloader (WinUSB)"
+FX3Recovery.DeviceDesc  = "bladeRF FX3 recovery (WinUSB)"

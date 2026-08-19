@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.env
+backend/resources/signal/*
+backend/resources/configs/*
+!backend/resources/signal/.gitkeep
+!backend/resources/configs/.gitkeep
+.DS_Store
